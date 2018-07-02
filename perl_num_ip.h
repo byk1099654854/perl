@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
+using std::string;
 
 /**
  * @brief 返回匹配传入的两个数字之间的数字的正则表达式（左开右开）
@@ -37,7 +37,6 @@ string GetPerlCloseOpen(const string& num_a, const string& num_b);
  * @return 返回正则表达式
  */
 string GetPerlCloseClose(const string& num_a, const string& num_b);
-
 
 /**
  * @brief 返回匹配传入的两个IP之间的IP的正则表达式（左开右开）

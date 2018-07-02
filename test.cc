@@ -6,7 +6,6 @@
 static int EventHandler(unsigned int id, unsigned long long from,
                         unsigned long long to, unsigned int flags, void *ctx) {
   /* printf("Match for pattern \"%s\" at offset %llu\n", (char *)ctx, to); */
-  /* *(int*)ctx = 0; */
   *static_cast<int*>(ctx) = 0;
   return 0;
 }
@@ -22,8 +21,8 @@ int TestIPOpenOpen(const string& ip, const string& ip_left,
   pattern += ")\"";
   hs_database_t *database;
   hs_compile_error_t *compile_err;
-  if (hs_compile(pattern.c_str(), HS_FLAG_DOTALL, HS_MODE_BLOCK, NULL, &database,
-                 &compile_err) != HS_SUCCESS) {
+  if (hs_compile(pattern.c_str(), HS_FLAG_DOTALL, HS_MODE_BLOCK, NULL,
+                 &database, &compile_err) != HS_SUCCESS) {
     hs_free_compile_error(compile_err);
     return -1;
   }
@@ -336,8 +335,8 @@ int TestNumCloseClose(const string& num, const string& num_left,
 }
 
 /* 测试4种情况他们的参数和期望返回值是一样时使用 */
-void TestIpArgumentRetSame(const int& ret, const string& ip, const string& ip_left,
-                           const string& ip_right) {
+void TestIpArgumentRetSame(const int& ret, const string& ip,
+                           const string& ip_left,  const string& ip_right) {
   ASSERT_EQ(ret, TestIPOpenOpen(ip, ip_left, ip_right));
   ASSERT_EQ(ret, TestIPOpenClose(ip, ip_left, ip_right));
   ASSERT_EQ(ret, TestIPCloseOpen(ip, ip_left, ip_right));
@@ -354,17 +353,17 @@ void TestIp() {
   ASSERT_EQ(-1, TestIPOpenClose("192.1.18.12", "192.1.18.29", "192.1.18.12"));
   ASSERT_EQ(0, TestIPCloseOpen("192.1.18.12", "192.1.18.29", "192.1.18.12"));
   ASSERT_EQ(0, TestIPCloseClose("192.1.18.12", "192.1.18.29", "192.1.18.12"));
-  long i = 0;
+  int i = 0;
   for (i = 13; i < 29; i++) {
     char ip[20] = {0};
     sprintf(ip, "192.1.18.%d", i);
-    TestIpArgumentRetSame (0, ip, "192.1.18.29", "192.1.18.12");
+    TestIpArgumentRetSame(0, ip, "192.1.18.29", "192.1.18.12");
   }
   printf("--182.16.1.2---192.168.18.19-\n");
   for (i = 19; i < 256; i++) {
     char ip[20] = {0};
     sprintf(ip, "182.16.1.%d", i);
-    TestIpArgumentRetSame (0, ip, "182.16.1.2", "192.168.18.19");
+    TestIpArgumentRetSame(0, ip, "182.16.1.2", "192.168.18.19");
   }
   int k = 0;
   for (i = 20; i < 256; i++) {
@@ -378,7 +377,7 @@ void TestIp() {
     for (k = 0; k < 256; k++) {
       char ip[20] = {0};
       sprintf(ip, "%d.%d.123.5", i, k);
-      TestIpArgumentRetSame (0, ip, "182.16.1.2", "192.168.18.19");
+      TestIpArgumentRetSame(0, ip, "182.16.1.2", "192.168.18.19");
     }
   }
 }
@@ -408,7 +407,7 @@ void TestNum() {
   ASSERT_EQ(-1, TestNumCloseOpen("100000", "100000", "99999"));
   ASSERT_EQ(0, TestNumCloseClose("100000", "100000", "99999"));
   printf("-114-----23074--\n");
-  long i = 0;
+  int i = 0;
   for (i = 115; i < 23074; i++) {
     char num[20] = {0};
     sprintf(num, "%d", i);
@@ -419,14 +418,12 @@ void TestNum() {
   }
 }
 
-TEST(test_ip, test){
+TEST(test_ip, test) {
   TestIp();
   TestNum();
 }
 
-int main(int argc, char *argv[]){
-
+int main(int argc, char *argv[]) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
-
 }
